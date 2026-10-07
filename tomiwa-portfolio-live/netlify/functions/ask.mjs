@@ -24,7 +24,9 @@ export default async (req) => {
 
   const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
   try {
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+    // Netlify AI Gateway sets GOOGLE_GEMINI_BASE_URL (and GEMINI_API_KEY) automatically; otherwise call Google directly.
+    const base = (process.env.GOOGLE_GEMINI_BASE_URL || "https://generativelanguage.googleapis.com").replace(/\/$/, "");
+    const r = await fetch(`${base}/v1beta/models/${model}:generateContent`, {
       method: "POST",
       headers: { "content-type": "application/json", "x-goog-api-key": key },
       body: JSON.stringify({
@@ -34,11 +36,12 @@ export default async (req) => {
       })
     });
     const j = await r.json();
-    if (!r.ok) return json({ error: "Upstream error" }, 502);
+    if (!r.ok) { console.error("Gemini error", r.status, JSON.stringify(j).slice(0, 500)); return json({ error: "Upstream error" }, 502); }
     const text = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("").trim();
     if (!text) return json({ error: "Empty answer" }, 502);
     return json({ text });
-  } catch {
+  } catch (e) {
+    console.error("Gemini request failed", String(e));
     return json({ error: "Upstream error" }, 502);
   }
 };
