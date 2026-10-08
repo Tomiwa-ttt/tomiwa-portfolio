@@ -28,12 +28,12 @@ export default async (req) => {
     const base = (process.env.GOOGLE_GEMINI_BASE_URL || "https://generativelanguage.googleapis.com").replace(/\/$/, "");
     const r = await fetch(`${base}/v1beta/models/${model}:generateContent`, {
       method: "POST",
-      signal: AbortSignal.timeout(20000),
+      signal: AbortSignal.timeout(25000),
       headers: { "content-type": "application/json", "x-goog-api-key": key },
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: RULES }] },
         contents: turns,
-        generationConfig: { maxOutputTokens: 2048, temperature: 0.3, thinkingConfig: { thinkingLevel: "low" } }
+        generationConfig: { maxOutputTokens: 2048, temperature: 0.3, thinkingConfig: { thinkingLevel: "minimal" } }
       })
     });
     const j = await r.json();
