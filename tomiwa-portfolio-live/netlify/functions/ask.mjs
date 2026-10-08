@@ -33,7 +33,7 @@ export default async (req) => {
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: RULES }] },
         contents: turns,
-        generationConfig: { maxOutputTokens: 2048, temperature: 0.3, thinkingConfig: { thinkingLevel: "minimal" } }
+        generationConfig: { maxOutputTokens: 2048, temperature: 0.3, thinkingConfig: { thinkingLevel: "low" } }
       })
     });
     const j = await r.json();
