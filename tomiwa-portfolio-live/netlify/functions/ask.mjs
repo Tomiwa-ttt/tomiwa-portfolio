@@ -22,7 +22,7 @@ export default async (req) => {
   while (turns.length && turns[0].role !== "user") turns.shift();
   if (!turns.length || turns[turns.length - 1].role !== "user") return json({ error: "Bad request" }, 400);
 
-  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  const model = process.env.GEMINI_MODEL || "gemini-3.8-flash";
   try {
     // Netlify AI Gateway sets GOOGLE_GEMINI_BASE_URL (and GEMINI_API_KEY) automatically; otherwise call Google directly.
     const base = (process.env.GOOGLE_GEMINI_BASE_URL || "https://generativelanguage.googleapis.com").replace(/\/$/, "");
