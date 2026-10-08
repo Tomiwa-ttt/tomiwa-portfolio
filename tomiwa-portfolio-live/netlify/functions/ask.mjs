@@ -32,7 +32,7 @@ export default async (req) => {
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: RULES }] },
         contents: turns,
-        generationConfig: { maxOutputTokens: 400, temperature: 0.3 }
+        generationConfig: { maxOutputTokens: 2048, temperature: 0.3 }
       })
     });
     const j = await r.json();
